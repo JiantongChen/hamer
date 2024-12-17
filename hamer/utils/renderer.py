@@ -189,7 +189,8 @@ class Renderer:
         """
         
         if full_frame:
-            image = cv2.imread(imgname).astype(np.float32)[:, :, ::-1] / 255.
+            if not image:
+                image = cv2.imread(imgname).astype(np.float32)[:, :, ::-1] / 255.
         else:
             image = image.clone() * torch.tensor(self.cfg.MODEL.IMAGE_STD, device=image.device).reshape(3,1,1)
             image = image + torch.tensor(self.cfg.MODEL.IMAGE_MEAN, device=image.device).reshape(3,1,1)
