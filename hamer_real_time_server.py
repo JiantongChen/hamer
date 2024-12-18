@@ -102,6 +102,7 @@ class CameraProcessor:
     def run(self):
         image = self.get_latest_image()
         if image is None:
+            self.results = defaultdict()
             return
         
         # Detect humans in image
@@ -110,6 +111,7 @@ class CameraProcessor:
 
         det_instances = det_out['instances']
         if len(det_instances)<1:
+            self.results = defaultdict()
             return
         
         sorted_scores = det_instances.scores.sort()
@@ -147,6 +149,7 @@ class CameraProcessor:
             is_right.append(1)
 
         if len(bboxes) == 0:
+            self.results = defaultdict()
             return
         
         boxes = np.stack(bboxes)
@@ -329,7 +332,7 @@ def get_results():
     if results:
         return jsonify(results), 200
     else:
-        return jsonify({"status": "error", "message": "No results available."}), 400
+        return jsonify({"status": "error", "message": "No results available."}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
